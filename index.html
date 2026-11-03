@@ -1,0 +1,77 @@
+const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="https://db.com/logo_v2.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#faf8f5" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <title>Küchen-Rechner: Cups in Gramm, Fahrenheit in Celsius | Maßwerk</title>
+    <meta
+      name="description"
+      content="Cups in Gramm, Fahrenheit in Celsius, Pixel in REM und Seitenverhältnisse berechnen – kostenlos, ohne Anmeldung und in Sekunden. Der schnelle Umrechner für Küche, Backen und Web."
+    />
+    <meta
+      name="keywords"
+      content="Küchen-Rechner, Cups in Gramm, Fahrenheit in Celsius, Umrechner, Pixel in REM, Seitenverhältnis berechnen"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Maßwerk" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content="Maßwerk" />
+    <meta
+      property="og:title"
+      content="Küchen-Rechner: Cups in Gramm, Fahrenheit in Celsius"
+    />
+    <meta
+      property="og:description"
+      content="Sofort umrechnen: Backzutaten, Ofentemperaturen, Pixel in REM und Bildformate. Kostenlos und ohne Anmeldung."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("mw-theme");
+          var dark = stored
+            ? stored === "dark"
+            : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          if (dark) document.documentElement.classList.add("dark");
+          document.documentElement.style.colorScheme = dark ? "dark" : "light";
+          if (localStorage.getItem("mw-lang") === "en") {
+            document.documentElement.lang = "en";
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Maßwerk – Sofortrechner",
+        "inLanguage": "de",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web",
+        "description": "Schneller Umrechner für Backzutaten, Ofentemperaturen, Pixel in REM und Seitenverhältnisse.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
