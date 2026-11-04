@@ -60,10 +60,6 @@ export default function LegalArticle({ content }) {
           </section>
         ))}
       </div>
-
-      <p className="mt-8 rounded-xl border border-dashed border-border bg-secondary/50 p-4 text-[12px] leading-relaxed text-muted-foreground">
-        {page.note}
-      </p>
     </article>
   );
 }
