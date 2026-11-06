@@ -6,9 +6,7 @@ export default function AdSlot({ placement = "top" }) {
   const { t } = useI18n();
   const isTop = placement === "top";
 
-  // Replace these with your actual AdSense Slot IDs created in your AdSense Console
-  const adSlotId = isTop ? "1234567890" : "0987654321";
-  const publisherId = "ca-pub-XXXXXXXXXXXXXXXX";
+  const publisherId = "ca-pub-8270844857037645";
 
   useEffect(() => {
     try {
@@ -32,7 +30,6 @@ export default function AdSlot({ placement = "top" }) {
           className="adsbygoogle"
           style={{ display: "block", width: "100%", textAlign: "center" }}
           data-ad-client={publisherId}
-          data-ad-slot={adSlotId}
           data-ad-format="auto"
           data-full-width-responsive="true"
         />
