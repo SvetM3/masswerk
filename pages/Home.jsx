@@ -35,7 +35,6 @@ const HINTS = [
   },
 ];
 
-// Define titles and descriptions for each tab and language
 const TAB_SEO = {
   kueche: {
     de: {
@@ -99,11 +98,73 @@ const TAB_SEO = {
   },
 };
 
+const FAQ_SCHEMA = {
+  de: {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Wie viel Gramm ist 1 Cup Mehl?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "1 Cup Allzweckmehl entspricht ungefähr 120 bis 125 Gramm. Bei Zucker entspricht 1 Cup etwa 200 Gramm, bei Butter ca. 227 Gramm."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie rechnet man Pixel in REM um?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Teile den Pixelwert durch die Basis-Schriftgröße (Standard ist 16px). Zum Beispiel: 24px / 16px = 1.5rem."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie rechnet man Fahrenheit in Celsius um?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ziehe 32 vom Fahrenheit-Wert ab und multipliziere das Ergebnis mit 5/9. Beispiel: 350°F minus 32 = 318 * 5/9 = 175°C."
+        }
+      }
+    ]
+  },
+  en: {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many grams is 1 cup of flour?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "1 cup of all-purpose flour equals approximately 120 to 125 grams. 1 cup of granulated sugar equals about 200 grams, and 1 cup of butter is 227 grams."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you convert pixels to REM?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Divide the pixel value by your root font size (default is 16px). For example: 24px / 16px = 1.5rem."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How to convert Fahrenheit to Celsius?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Subtract 32 from the Fahrenheit temperature and multiply by 5/9. For example: (350°F - 32) * 5/9 = 175°C."
+        }
+      }
+    ]
+  }
+};
+
 export default function Home() {
   const [tab, setTab] = useState("kueche");
   const { lang, t } = useI18n();
 
-  // Dynamically update document title and meta description when tab or language changes
   useEffect(() => {
     const seoData = TAB_SEO[tab]?.[lang] || TAB_SEO.kueche[lang];
     document.title = seoData.title;
@@ -116,6 +177,14 @@ export default function Home() {
 
   return (
     <div className="rise">
+      {/* Dynamic FAQ Schema for Search Engines */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(FAQ_SCHEMA[lang] || FAQ_SCHEMA.de),
+        }}
+      />
+
       <section className="pb-5 pt-6 sm:pb-6 sm:pt-10">
         <h1 className="font-heading text-[26px] font-semibold leading-[1.08] tracking-tight text-foreground sm:text-[38px]">
           {t("Sofort umrechnen.")}
