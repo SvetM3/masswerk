@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TabNav from "@/components/TabNav";
 import KitchenConverter from "@/components/tools/KitchenConverter";
 import PixelRemConverter from "@/components/tools/PixelRemConverter";
@@ -35,9 +35,84 @@ const HINTS = [
   },
 ];
 
+// Define titles and descriptions for each tab and language
+const TAB_SEO = {
+  kueche: {
+    de: {
+      title: "Küchen-Rechner: Cups in Gramm & Fahrenheit in Celsius | Maßwerk",
+      desc: "Cups in Gramm und Milliliter umrechnen, Ofentemperaturen anpassen. Kostenlos und ohne Anmeldung.",
+    },
+    en: {
+      title: "Kitchen Converter: Cups to Grams & Fahrenheit to Celsius | Maßwerk",
+      desc: "Convert US cups to grams and milliliters, adjust oven temperatures. Fast, free, and no sign-up.",
+    },
+  },
+  rem: {
+    de: {
+      title: "Pixel in REM Rechner & CSS Einheiten | Maßwerk",
+      desc: "Pixelwerte (px) in REM umrechnen bei jeder beliebigen Basis-Schriftgröße für responsives Webdesign.",
+    },
+    en: {
+      title: "Pixel to REM Converter & CSS Units | Maßwerk",
+      desc: "Convert pixel values (px) to REM units with custom root font sizes for responsive web typography.",
+    },
+  },
+  format: {
+    de: {
+      title: "Seitenverhältnis & Aspect Ratio Rechner | Maßwerk",
+      desc: "Bildabmessungen und Seitenverhältnisse (16:9, 4:3) proportional berechnen vor dem Export.",
+    },
+    en: {
+      title: "Aspect Ratio Calculator & Image Dimensions | Maßwerk",
+      desc: "Calculate proportional image dimensions and aspect ratios (16:9, 4:3) quickly before exporting.",
+    },
+  },
+  prozent: {
+    de: {
+      title: "Prozent- & MwSt.-Rechner | Maßwerk",
+      desc: "Prozentuale Veränderungen, Rabatte und Mehrwertsteuer (MwSt.) in Sekunden berechnen.",
+    },
+    en: {
+      title: "Percentage & VAT Calculator | Maßwerk",
+      desc: "Compute percentage increases, discount savings, and regional sales tax rates in seconds.",
+    },
+  },
+  passwort: {
+    de: {
+      title: "Sicherer Passwort-Generator | Maßwerk",
+      desc: "Starke, anpassbare Passwörter sicher und lokal direkt in Ihrem Browser generieren.",
+    },
+    en: {
+      title: "Secure Password Generator | Maßwerk",
+      desc: "Generate strong, customizable passwords securely and locally right inside your browser.",
+    },
+  },
+  text: {
+    de: {
+      title: "Wortzähler & Zeichenzähler | Maßwerk",
+      desc: "Wörter, Zeichen, Sätze und geschätzte Lesezeit für Texte und Artikel live zählen.",
+    },
+    en: {
+      title: "Word & Character Counter | Maßwerk",
+      desc: "Count words, characters, sentences, and estimated reading time live as you type or paste.",
+    },
+  },
+};
+
 export default function Home() {
   const [tab, setTab] = useState("kueche");
-  const { t } = useI18n();
+  const { lang, t } = useI18n();
+
+  // Dynamically update document title and meta description when tab or language changes
+  useEffect(() => {
+    const seoData = TAB_SEO[tab]?.[lang] || TAB_SEO.kueche[lang];
+    document.title = seoData.title;
+
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", seoData.desc);
+    }
+  }, [tab, lang]);
 
   return (
     <div className="rise">
