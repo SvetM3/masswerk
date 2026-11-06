@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 
@@ -6,18 +6,36 @@ export default function AdSlot({ placement = "top" }) {
   const { t } = useI18n();
   const isTop = placement === "top";
 
+  // Replace these with your actual AdSense Slot IDs created in your AdSense Console
+  const adSlotId = isTop ? "1234567890" : "0987654321";
+  const publisherId = "ca-pub-XXXXXXXXXXXXXXXX";
+
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    } catch (e) {
+      console.error("AdSense execution error:", e);
+    }
+  }, []);
+
   return (
     <div className="mx-auto w-full max-w-4xl px-4 sm:px-6">
       <div
         className={cn(
-          "flex items-center justify-center rounded-xl border border-dashed border-border bg-secondary/40",
-          isTop ? "mt-3 h-14 sm:h-20" : "mb-4 h-20 sm:h-24"
+          "flex items-center justify-center rounded-xl border border-dashed border-border bg-secondary/40 overflow-hidden",
+          isTop ? "mt-3 min-h-[90px]" : "mb-4 min-h-[90px]"
         )}
-        aria-hidden="true"
       >
-        <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-muted-foreground/70">
-          {t("Werbung")}
-        </span>
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block", width: "100%", textAlign: "center" }}
+          data-ad-client={publisherId}
+          data-ad-slot={adSlotId}
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
       </div>
     </div>
   );
