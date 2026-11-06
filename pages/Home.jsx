@@ -80,6 +80,18 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* SEO Content Enrichment Block */}
+      <section className="mt-12 border-t border-border/60 pt-8 text-muted-foreground">
+        <h2 className="font-heading text-sm font-semibold text-foreground">
+          {t("Über den Online-Sofortrechner")}
+        </h2>
+        <p className="mt-2 text-xs leading-relaxed">
+          {t(
+            "Maßwerk bietet präzise und kostenlose Werkzeuge für alltägliche Aufgaben. Von der Umrechnung von Backzutaten und Ofentemperaturen über CSS Pixel-zu-REM-Berechnungen bis hin zu Bildseitenverhältnissen, Mehrwertsteuer- und Prozentrechnern – alles läuft clientseitig, sicher und blitzschnell direkt in Ihrem Webbrowser."
+          )}
+        </p>
+      </section>
     </div>
   );
 }
