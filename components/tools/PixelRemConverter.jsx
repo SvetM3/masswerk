@@ -4,7 +4,7 @@ import ToolCard from "@/components/ToolCard";
 import { formatNumber, parseDecimal } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
-import { useARG } from "@/lib/ARGContext"; // <--- 1. Import ARG Hook
+import { useARG } from "../../lib/ARGContext";
 
 const BASE_PRESETS = [14, 16, 18, 20];
 const COMMON_PX = [4, 8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 40, 48, 64];
