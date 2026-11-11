@@ -3,6 +3,7 @@ import { Check, Copy, RefreshCw } from "lucide-react";
 import ToolCard from "@/components/ToolCard";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
+import { useARG } from "@/lib/ARGContext"; // <--- 1. Import ARG Hook
 
 const SETS = {
   lower: "abcdefghijkmnopqrstuvwxyz",
@@ -44,6 +45,7 @@ const TOGGLES = [
 
 export default function PasswordGenerator() {
   const { t } = useI18n();
+  const { reportToolState } = useARG(); // <--- 2. Get reportToolState function
   const [length, setLength] = useState(16);
   const [options, setOptions] = useState({ numbers: true, symbols: true });
   const [password, setPassword] = useState(() =>
@@ -69,6 +71,12 @@ export default function PasswordGenerator() {
     } catch (error) {
       setCopied(false);
     }
+  };
+
+  // 3. Handler to update length and report to the ARG engine
+  const handleLengthChange = (val) => {
+    setLength(val);
+    reportToolState("passwort", "length", val);
   };
 
   return (
@@ -133,7 +141,7 @@ export default function PasswordGenerator() {
               step="1"
               value={length}
               aria-label={t("Länge")}
-              onChange={(event) => setLength(Number(event.target.value))}
+              onChange={(event) => handleLengthChange(Number(event.target.value))}
               className="mt-3 h-1.5 w-full cursor-pointer appearance-none rounded-full bg-secondary accent-foreground"
             />
           </div>
