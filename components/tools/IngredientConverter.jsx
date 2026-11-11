@@ -18,7 +18,7 @@ const fieldClass =
   "w-full rounded-xl border border-input bg-background px-3.5 py-3 text-[15px] text-foreground outline-none transition focus:border-foreground/40 focus:ring-4 focus:ring-foreground/5";
 
 const labelClass =
-  "mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground";
+  "mb-1.5 block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground";
 
 export default function IngredientConverter() {
   const { lang, t } = useI18n();
@@ -126,9 +126,7 @@ export default function IngredientConverter() {
         </div>
 
         <div className="rounded-xl bg-secondary/60 px-4 py-4">
-          <p className={labelClass}>
-            {t("Ergebnis")}
-          </p>
+          <p className={labelClass}>{t("Ergebnis")}</p>
           <div className="mt-1.5 flex items-end gap-1.5">
             <span className="num text-[36px] font-semibold leading-none text-foreground">
               {isValid ? formatQuantity(primaryValue) : "–"}
