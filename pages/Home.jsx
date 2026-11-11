@@ -6,8 +6,8 @@ import AspectRatioCalculator from "@/components/tools/AspectRatioCalculator";
 import PercentageCalculator from "@/components/tools/PercentageCalculator";
 import PasswordGenerator from "@/components/tools/PasswordGenerator";
 import WordCounter from "@/components/tools/WordCounter";
-import SecretSanctuary from "@/components/SecretSanctuary"; // <--- 1. Import Secret Sanctuary
-import { useARG } from "./lib/ARGContext";
+import SecretSanctuary from "@/components/SecretSanctuary";
+import { useARG } from "../lib/ARGContext";
 import { useI18n } from "@/lib/i18n";
 
 const HINTS = [
@@ -166,7 +166,7 @@ const FAQ_SCHEMA = {
 export default function Home() {
   const [tab, setTab] = useState("kueche");
   const { lang, t } = useI18n();
-  const { isUnlocked } = useARG(); // <--- 3. Grab isUnlocked state from ARG context
+  const { isUnlocked } = useARG();
   const isDe = lang === "de";
 
   useEffect(() => {
@@ -240,5 +240,8 @@ export default function Home() {
         </p>
       </section>
 
-      {/* 4. Render Secret Sanctuary when unlocked */}
-      {is
+      {/* Render Secret Sanctuary when unlocked */}
+      {isUnlocked && <SecretSanctuary />}
+    </div>
+  );
+}
