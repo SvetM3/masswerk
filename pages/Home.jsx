@@ -7,7 +7,7 @@ import PercentageCalculator from "@/components/tools/PercentageCalculator";
 import PasswordGenerator from "@/components/tools/PasswordGenerator";
 import WordCounter from "@/components/tools/WordCounter";
 import SecretSanctuary from "@/components/SecretSanctuary"; // <--- 1. Import Secret Sanctuary
-import { useARG } from "@/lib/ARGContext"; // <--- 2. Import ARG Hook
+import { useARG } from "./lib/ARGContext";
 import { useI18n } from "@/lib/i18n";
 
 const HINTS = [
