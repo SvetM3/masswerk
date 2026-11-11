@@ -6,6 +6,8 @@ import AspectRatioCalculator from "@/components/tools/AspectRatioCalculator";
 import PercentageCalculator from "@/components/tools/PercentageCalculator";
 import PasswordGenerator from "@/components/tools/PasswordGenerator";
 import WordCounter from "@/components/tools/WordCounter";
+import SecretSanctuary from "@/components/SecretSanctuary"; // <--- 1. Import Secret Sanctuary
+import { useARG } from "@/lib/ARGContext"; // <--- 2. Import ARG Hook
 import { useI18n } from "@/lib/i18n";
 
 const HINTS = [
@@ -164,6 +166,7 @@ const FAQ_SCHEMA = {
 export default function Home() {
   const [tab, setTab] = useState("kueche");
   const { lang, t } = useI18n();
+  const { isUnlocked } = useARG(); // <--- 3. Grab isUnlocked state from ARG context
   const isDe = lang === "de";
 
   useEffect(() => {
@@ -177,7 +180,7 @@ export default function Home() {
   }, [tab, lang]);
 
   return (
-    <div className="rise">
+    <div className="rise relative">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -236,6 +239,6 @@ export default function Home() {
             : "Maßwerk provides precise and free tools for everyday tasks. From converting baking ingredients and oven temperatures to CSS pixel-to-REM calculations, image aspect ratios, VAT, and percentage calculators—everything runs client-side, securely, and instantly right in your web browser."}
         </p>
       </section>
-    </div>
-  );
-}
+
+      {/* 4. Render Secret Sanctuary when unlocked */}
+      {is
