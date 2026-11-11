@@ -5,6 +5,7 @@ import { INGREDIENT_GROUPS, KITCHEN_UNITS, convertKitchen, findIngredient } from
 import { formatQuantity, parseDecimal } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
+import { useARG } from "@/lib/ARGContext"; // <--- 1. Import ARG Hook
 
 const QUICK_AMOUNTS = [
   { label: "¼", value: 0.25 },
@@ -21,6 +22,7 @@ const labelClass =
 
 export default function IngredientConverter() {
   const { lang, t } = useI18n();
+  const { reportToolState } = useARG(); // <--- 2. Get reportToolState function
   const [ingredientId, setIngredientId] = useState("mehl405");
   const [unitId, setUnitId] = useState("cup_us");
   const [amount, setAmount] = useState("1");
@@ -44,6 +46,12 @@ export default function IngredientConverter() {
   const formatQuickValue = (value) => {
     const raw = String(value);
     return lang === "en" ? raw : raw.replace(".", ",");
+  };
+
+  // Handler for text input changes
+  const handleAmountChange = (val) => {
+    setAmount(val);
+    reportToolState("kueche", "grams", val); // <--- 3. Report state to ARG
   };
 
   return (
@@ -82,7 +90,7 @@ export default function IngredientConverter() {
               type="text"
               inputMode="decimal"
               value={amount}
-              onChange={(event) => setAmount(event.target.value)}
+              onChange={(event) => handleAmountChange(event.target.value)}
               className={cn(fieldClass, "num w-[92px] px-2 text-center text-lg font-semibold")}
             />
             <div className="flex flex-wrap gap-1.5">
@@ -108,7 +116,7 @@ export default function IngredientConverter() {
               <button
                 key={quick.label}
                 type="button"
-                onClick={() => setAmount(formatQuickValue(quick.value))}
+                onClick={() => handleAmountChange(formatQuickValue(quick.value))}
                 className="min-h-[32px] min-w-[40px] rounded-lg border border-border bg-secondary/60 px-2 text-[12px] font-medium text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
               >
                 {quick.label}
@@ -119,31 +127,4 @@ export default function IngredientConverter() {
         </div>
 
         <div className="rounded-xl bg-secondary/60 px-4 py-4">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            {t("Ergebnis")}
-          </p>
-          <div className="mt-1.5 flex items-end gap-1.5">
-            <span className="num text-[36px] font-semibold leading-none text-foreground">
-              {isValid ? formatQuantity(primaryValue) : "–"}
-            </span>
-            <span className="pb-1 text-base font-medium text-muted-foreground">{primaryUnit}</span>
-          </div>
-          <p className="mt-2 text-[13px] text-muted-foreground">
-            {isValid
-              ? t("entspricht ca. {value} {unit}", {
-                  value: formatQuantity(secondaryValue),
-                  unit: secondaryUnit,
-                })
-              : t("Bitte eine Menge größer als 0 eingeben.")}
-          </p>
-        </div>
-
-        <p className="text-[11px] leading-relaxed text-muted-foreground">
-          {t(
-            "Richtwerte: 1 Cup (US) ≈ 237 ml · 1 Cup (UK) ≈ 284 ml · 1 EL = 15 ml · 1 TL = 5 ml. Je nach Zutat und Körnung können die Grammwerte leicht abweichen."
-          )}
-        </p>
-      </div>
-    </ToolCard>
-  );
-}
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16
