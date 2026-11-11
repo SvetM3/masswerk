@@ -3,7 +3,7 @@ import { Check, Copy, RefreshCw } from "lucide-react";
 import ToolCard from "@/components/ToolCard";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
-import { useARG } from "@/lib/ARGContext"; // <--- 1. Import ARG Hook
+import { useARG } from "../../lib/ARGContext";
 
 const SETS = {
   lower: "abcdefghijkmnopqrstuvwxyz",
