@@ -22,7 +22,7 @@ const labelClass =
 
 export default function IngredientConverter() {
   const { lang, t } = useI18n();
-  const { reportToolState } = useARG(); // <--- 2. Get reportToolState function
+  const { reportToolState } = useARG();
   const [ingredientId, setIngredientId] = useState("mehl405");
   const [unitId, setUnitId] = useState("cup_us");
   const [amount, setAmount] = useState("1");
@@ -48,10 +48,9 @@ export default function IngredientConverter() {
     return lang === "en" ? raw : raw.replace(".", ",");
   };
 
-  // Handler for text input changes
   const handleAmountChange = (val) => {
     setAmount(val);
-    reportToolState("kueche", "grams", val); // <--- 3. Report state to ARG
+    reportToolState("kueche", "grams", val);
   };
 
   return (
@@ -127,4 +126,31 @@ export default function IngredientConverter() {
         </div>
 
         <div className="rounded-xl bg-secondary/60 px-4 py-4">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            {t("Ergebnis")}
+          </p>
+          <div className="mt-1.5 flex items-end gap-1.5">
+            <span className="num text-[36px] font-semibold leading-none text-foreground">
+              {isValid ? formatQuantity(primaryValue) : "–"}
+            </span>
+            <span className="pb-1 text-base font-medium text-muted-foreground">{primaryUnit}</span>
+          </div>
+          <p className="mt-2 text-[13px] text-muted-foreground">
+            {isValid
+              ? t("entspricht ca. {value} {unit}", {
+                  value: formatQuantity(secondaryValue),
+                  unit: secondaryUnit,
+                })
+              : t("Bitte eine Menge größer als 0 eingeben.")}
+          </p>
+        </div>
+
+        <p className="text-[11px] leading-relaxed text-muted-foreground">
+          {t(
+            "Richtwerte: 1 Cup (US) ≈ 237 ml · 1 Cup (UK) ≈ 284 ml · 1 EL = 15 ml · 1 TL = 5 ml. Je nach Zutat und Körnung können die Grammwerte leicht abweichen."
+          )}
+        </p>
+      </div>
+    </ToolCard>
+  );
+}
