@@ -5,7 +5,7 @@ import { INGREDIENT_GROUPS, KITCHEN_UNITS, convertKitchen, findIngredient } from
 import { formatQuantity, parseDecimal } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
-import { useARG } from "@/lib/ARGContext"; // <--- 1. Import ARG Hook
+import { useARG } from "../../lib/ARGContext";
 
 const QUICK_AMOUNTS = [
   { label: "¼", value: 0.25 },
