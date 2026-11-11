@@ -4,6 +4,7 @@ import ToolCard from "@/components/ToolCard";
 import { formatNumber, parseDecimal } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
+import { useARG } from "@/lib/ARGContext"; // <--- 1. Import ARG Hook
 
 const BASE_PRESETS = [14, 16, 18, 20];
 const COMMON_PX = [4, 8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 40, 48, 64];
@@ -13,6 +14,7 @@ const labelClass =
 
 export default function PixelRemConverter() {
   const { t } = useI18n();
+  const { reportToolState } = useARG(); // <--- 2. Get reportToolState function
   const [base, setBase] = useState(16);
   const [px, setPx] = useState("24");
 
@@ -21,6 +23,12 @@ export default function PixelRemConverter() {
   const rem = isValid && base > 0 ? parsedPx / base : null;
 
   const changeBase = (delta) => setBase((current) => Math.min(32, Math.max(8, current + delta)));
+
+  // 3. Handler to update state and report to ARG engine
+  const handlePxChange = (val) => {
+    setPx(val);
+    reportToolState("rem", "px", val);
+  };
 
   return (
     <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
@@ -36,7 +44,7 @@ export default function PixelRemConverter() {
                 type="text"
                 inputMode="decimal"
                 value={px}
-                onChange={(event) => setPx(event.target.value)}
+                onChange={(event) => handlePxChange(event.target.value)}
                 className="num w-full rounded-xl border border-input bg-background px-3.5 py-3 text-lg font-semibold text-foreground outline-none transition focus:border-foreground/40 focus:ring-4 focus:ring-foreground/5"
               />
               <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
