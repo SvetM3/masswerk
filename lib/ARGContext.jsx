@@ -46,37 +46,47 @@ export function ARGProvider({ children }) {
     const expectedStep = steps[stepIndex];
     if (!expectedStep) return;
 
-    // Check if the current action matches the exact expected next step in sequence
-    const matchesExpected =
-      toolName === expectedStep.tool && stringVal === String(expectedStep.value);
+    const isExpectedTool = toolName === expectedStep.tool;
+    const targetVal = String(expectedStep.value);
 
-    if (matchesExpected) {
-      const nextIndex = stepIndex + 1;
-      if (nextIndex >= steps.length) {
-        setIsUnlocked(true);
-        setStepIndex(0);
-        setToast({ message: "The veil parts completely...", type: "success" });
+    if (isExpectedTool) {
+      if (stringVal === targetVal) {
+        // Exact match for the expected step!
+        const nextIndex = stepIndex + 1;
+        if (nextIndex >= steps.length) {
+          setIsUnlocked(true);
+          setStepIndex(0);
+          setToast({ message: "The veil parts completely...", type: "success" });
+        } else {
+          setStepIndex(nextIndex);
+          setToast({ message: `You found key ${nextIndex} of ${steps.length}`, type: "progress" });
+        }
+      } else if (targetVal.startsWith(stringVal)) {
+        // User is actively typing towards the target (e.g. typing "3" before "32"). Do nothing, allow typing!
+        return;
       } else {
-        setStepIndex(nextIndex);
-        setToast({ message: `You found key ${nextIndex} of ${steps.length}`, type: "progress" });
+        // They typed a completely different/wrong value on the expected tool after starting
+        if (stepIndex > 0) {
+          setStepIndex(0);
+          setToast({ message: "The frequency destabilized. Sequence reset.", type: "reset" });
+        }
       }
     } else {
-      // STRICT SEQUENCE RULE:
-      // If we have already found the first key (stepIndex > 0), ANY interaction with 
-      // another tool or wrong input immediately resets progress back to 0!
+      // They interacted with a DIFFERENT tool than expected
       if (stepIndex > 0) {
         const firstStep = steps[0];
-        const isRestartingFirstStep = toolName === firstStep?.tool && stringVal === String(firstStep?.value);
+        const isRestartingFirst = toolName === firstStep?.tool && stringVal === String(firstStep?.value);
 
-        if (isRestartingFirstStep) {
+        if (isRestartingFirst) {
           setStepIndex(1);
           setToast({ message: `You found key 1 of ${steps.length}`, type: "progress" });
         } else {
+          // Stray action on another tool after finding key 1 -> Immediate reset!
           setStepIndex(0);
           setToast({ message: "The frequency destabilized. Sequence reset.", type: "reset" });
         }
       } else {
-        // At step 0, if they try a future step out of order, give the warning toast
+        // At step 0, if they hit a future step out of order
         const futureStepIndex = steps.findIndex(
           (s, idx) => idx > 0 && s.tool === toolName && String(s.value) === stringVal
         );
