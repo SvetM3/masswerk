@@ -46,7 +46,7 @@ export function ARGProvider({ children }) {
     const expectedStep = steps[stepIndex];
     if (!expectedStep) return;
 
-    // 1. Check if it matches the EXPECTED next step in sequence
+    // Check if the current action matches the exact expected next step in sequence
     const matchesExpected =
       toolName === expectedStep.tool && stringVal === String(expectedStep.value);
 
@@ -60,27 +60,30 @@ export function ARGProvider({ children }) {
         setStepIndex(nextIndex);
         setToast({ message: `You found key ${nextIndex} of ${steps.length}`, type: "progress" });
       }
-      return;
-    }
+    } else {
+      // STRICT SEQUENCE RULE:
+      // If we have already found the first key (stepIndex > 0), ANY interaction with 
+      // another tool or wrong input immediately resets progress back to 0!
+      if (stepIndex > 0) {
+        const firstStep = steps[0];
+        const isRestartingFirstStep = toolName === firstStep?.tool && stringVal === String(firstStep?.value);
 
-    // 2. Check if they hit a LATER step out of order (e.g., trying step 2 before step 1)
-    const futureStepIndex = steps.findIndex(
-      (s, idx) => idx > stepIndex && s.tool === toolName && String(s.value) === stringVal
-    );
-
-    if (futureStepIndex !== -1) {
-      // They found a valid key, but out of order!
-      setToast({ message: "A resonance stirs, but something must precede this...", type: "warning" });
-      return;
-    }
-
-    // 3. Check if they re-enter the first step to restart cleanly
-    const firstStep = steps[0];
-    const isFirstStepAction = toolName === firstStep?.tool && stringVal === String(firstStep?.value);
-
-    if (isFirstStepAction && stepIndex > 0) {
-      setStepIndex(1);
-      setToast({ message: `You found key 1 of ${steps.length}`, type: "progress" });
+        if (isRestartingFirstStep) {
+          setStepIndex(1);
+          setToast({ message: `You found key 1 of ${steps.length}`, type: "progress" });
+        } else {
+          setStepIndex(0);
+          setToast({ message: "The frequency destabilized. Sequence reset.", type: "reset" });
+        }
+      } else {
+        // At step 0, if they try a future step out of order, give the warning toast
+        const futureStepIndex = steps.findIndex(
+          (s, idx) => idx > 0 && s.tool === toolName && String(s.value) === stringVal
+        );
+        if (futureStepIndex !== -1) {
+          setToast({ message: "A resonance stirs, but something must precede this...", type: "warning" });
+        }
+      }
     }
   };
 
