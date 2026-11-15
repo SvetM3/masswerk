@@ -46,7 +46,7 @@ export function ARGProvider({ children }) {
     const expectedStep = steps[stepIndex];
     if (!expectedStep) return;
 
-    // Check if the current tool action matches the expected step's tool and target value
+    // Check if the current action matches the expected step's tool and target value exactly
     const matchesExpected =
       toolName === expectedStep.tool && stringVal === String(expectedStep.value);
 
@@ -57,23 +57,22 @@ export function ARGProvider({ children }) {
         setStepIndex(0);
         setToast({ message: "The veil parts completely...", type: "success" });
       } else {
-        setStepIndex(nextIndex);
-        setToast({ message: `You found key ${nextIndex} of ${steps.length}`, type: "progress" });
+        if (stepIndex < nextIndex) {
+          setStepIndex(nextIndex);
+          setToast({ message: `You found key ${nextIndex} of ${steps.length}`, type: "progress" });
+        }
       }
     } else {
-      // If they type a full incorrect value on a target tool after starting, check if it resets
+      // If they explicitly re-enter the first step value later, allow clean restart
       const firstStep = steps[0];
       const isFirstStepAction = toolName === firstStep?.tool && stringVal === String(firstStep?.value);
 
-      // If they are currently past step 0 and perform an active wrong action on another tool, reset sequence
-      if (stepIndex > 0 && !isFirstStepAction && toolName === expectedStep.tool) {
-        setStepIndex(0);
-        setToast({ message: "The frequency destabilized. Sequence reset.", type: "reset" });
-      } else if (isFirstStepAction && stepIndex > 0) {
-        // Restart cleanly if they hit step 1 again
+      if (isFirstStepAction && stepIndex > 0) {
         setStepIndex(1);
         setToast({ message: `You found key 1 of ${steps.length}`, type: "progress" });
       }
+      // Note: Partial typing, default values, and wrong intermediate keystrokes 
+      // are now safely ignored instead of causing frustrating resets!
     }
   };
 
