@@ -46,7 +46,7 @@ export function ARGProvider({ children }) {
     const expectedStep = steps[stepIndex];
     if (!expectedStep) return;
 
-    // Check if the current action matches the expected step's tool and target value exactly
+    // 1. Check if it matches the EXPECTED next step in sequence
     const matchesExpected =
       toolName === expectedStep.tool && stringVal === String(expectedStep.value);
 
@@ -57,22 +57,30 @@ export function ARGProvider({ children }) {
         setStepIndex(0);
         setToast({ message: "The veil parts completely...", type: "success" });
       } else {
-        if (stepIndex < nextIndex) {
-          setStepIndex(nextIndex);
-          setToast({ message: `You found key ${nextIndex} of ${steps.length}`, type: "progress" });
-        }
+        setStepIndex(nextIndex);
+        setToast({ message: `You found key ${nextIndex} of ${steps.length}`, type: "progress" });
       }
-    } else {
-      // If they explicitly re-enter the first step value later, allow clean restart
-      const firstStep = steps[0];
-      const isFirstStepAction = toolName === firstStep?.tool && stringVal === String(firstStep?.value);
+      return;
+    }
 
-      if (isFirstStepAction && stepIndex > 0) {
-        setStepIndex(1);
-        setToast({ message: `You found key 1 of ${steps.length}`, type: "progress" });
-      }
-      // Note: Partial typing, default values, and wrong intermediate keystrokes 
-      // are now safely ignored instead of causing frustrating resets!
+    // 2. Check if they hit a LATER step out of order (e.g., trying step 2 before step 1)
+    const futureStepIndex = steps.findIndex(
+      (s, idx) => idx > stepIndex && s.tool === toolName && String(s.value) === stringVal
+    );
+
+    if (futureStepIndex !== -1) {
+      // They found a valid key, but out of order!
+      setToast({ message: "A resonance stirs, but something must precede this...", type: "warning" });
+      return;
+    }
+
+    // 3. Check if they re-enter the first step to restart cleanly
+    const firstStep = steps[0];
+    const isFirstStepAction = toolName === firstStep?.tool && stringVal === String(firstStep?.value);
+
+    if (isFirstStepAction && stepIndex > 0) {
+      setStepIndex(1);
+      setToast({ message: `You found key 1 of ${steps.length}`, type: "progress" });
     }
   };
 
