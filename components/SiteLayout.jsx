@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Ruler } from "lucide-react";
-import AdSlot from "@/components/AdSlot";
 import SiteFooter from "@/components/SiteFooter";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
@@ -32,13 +31,10 @@ export default function SiteLayout() {
         </div>
       </header>
 
-      <AdSlot placement="top" />
-
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 pb-12 sm:px-6">
         <Outlet />
       </main>
 
-      <AdSlot placement="bottom" />
       <SiteFooter />
     </div>
   );
