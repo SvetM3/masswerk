@@ -15,7 +15,7 @@ export default function SecretSanctuary() {
   const handleEchoSubmit = (e) => {
     e.preventDefault();
     if (!echoInput.trim() || submitted) return;
-    
+
     setEchoes([
       { name: "You (Seeker #Current)", word: echoInput.trim(), time: "Just now" },
       ...echoes
@@ -37,6 +37,7 @@ export default function SecretSanctuary() {
           </h1>
         </div>
         <button
+          type="button"
           onClick={() => setIsUnlocked(false)}
           className="text-xs font-mono text-neutral-400 hover:text-white px-4 py-2 rounded-lg border border-neutral-800 hover:border-neutral-600 transition"
         >
@@ -103,3 +104,5 @@ export default function SecretSanctuary() {
         Maßwerk Sanctuary Layer • Rotates every 72 hours.
       </div>
     </div>
+  );
+}
