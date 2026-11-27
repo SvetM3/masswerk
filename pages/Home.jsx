@@ -486,4 +486,15 @@ const TOOL_ARTICLES = {
       faqs: [
         {
           q: "Wie viele Wörter hat eine DIN-A4-Normseite?",
-          a: "Eine klassische Normseite (30 Zeilen à 60
+          a: "Eine klassische Normseite (30 Zeilen à 60 Anschläge = 1.800 Zeichen inkl. Leerzeichen) entspricht im Deutschen durchschnittlich etwa 250 bis 300 Wörtern.",
+        },
+        {
+          q: "Was ist die optimale Länge für SEO-Meta-Beschreibungen?",
+          a: "Meta-Titles sollten 50 bis 60 Zeichen nicht überschreiten, während Meta-Descriptions idealerweise zwischen 140 und 155 Zeichen inklusive Leerzeichen liegen.",
+        },
+        {
+          q: "Warum wird zwischen Zeichen mit und ohne Leerzeichen unterschieden?",
+          a: "Manche Vorgaben (z. B. bestimmte Formulare, Übersetzungsabrechnungen oder Normseiten) zählen Leerzeichen mit, andere bewerten nur sichtbare Schriftzeichen.",
+        },
+        {
+          q: "Wie lange dauert ein gesprochener Vortrag mit 1.000 W
