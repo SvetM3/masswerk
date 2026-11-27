@@ -497,4 +497,225 @@ const TOOL_ARTICLES = {
           a: "Manche Vorgaben (z. B. bestimmte Formulare, Übersetzungsabrechnungen oder Normseiten) zählen Leerzeichen mit, andere bewerten nur sichtbare Schriftzeichen.",
         },
         {
-          q: "Wie lange dauert ein gesprochener Vortrag mit 1.000 W
+          q: "Wie lange dauert ein gesprochener Vortrag mit 1.000 Wörtern?",
+          a: "Beim ruhigen Sprechen liegt das Tempo meist bei rund 120 bis 150 Wörtern pro Minute – 1.000 Wörter entsprechen also etwa 7 bis 8 Minuten Vortragszeit.",
+        },
+      ],
+    },
+    en: {
+      heading: "Word Count, Character Limits & Reading Time for Writers & SEO",
+      intro:
+        "Whether you are drafting an academic essay with strict word limits, crafting social media copy, or optimizing a blog post for search engines, tracking exact word counts, characters (with and without spaces), and sentence density helps keep your writing sharp and focused.",
+      deepDiveHeading: "Balancing Length Limits with Readability",
+      deepDiveText:
+        "Tracking word count alongside reading time and sentence structure helps catch wordiness early. Breaking dense blocks into scannable sections and clear sentences makes articles easier to read on both desktop and mobile screens.",
+      formulaTitle: "How Estimated Reading Time Is Calculated",
+      formulaText:
+        "The average adult reads digital screen text at roughly 200 to 225 words per minute. Our counter divides your live word count by this benchmark to give an accurate reading duration for articles, newsletters, and speeches.",
+      tableTitle: "Helpful Length Benchmarks",
+      tableHeaders: ["Content Type", "Typical Range", "Key Focus"],
+      tableRows: [
+        ["SEO Title Tag", "~50–60 characters", "Lead with primary topic and brand clarity"],
+        ["SEO Meta Description", "~145–155 characters", "Summarize value clearly for searchers"],
+        ["Double-Spaced Page", "~250 words", "Common academic formatting baseline"],
+        ["Short Article / Summary", "~200–600 words", "Concise points with clear headings"],
+      ],
+      faqs: [
+        {
+          q: "How many words fit on a standard single-spaced page?",
+          a: "A standard single-spaced page in 12pt Times New Roman or Arial holds roughly 450 to 500 words, while a double-spaced academic page holds around 250 words.",
+        },
+        {
+          q: "What are the ideal character counts for SEO titles and descriptions?",
+          a: "Keep SEO page titles under 60 characters and meta descriptions between 145 and 155 characters (including spaces) to prevent truncation in search results.",
+        },
+        {
+          q: "Why check both character count with and without spaces?",
+          a: "Different platforms, translation tools, and strict character limits count spaces differently, so checking both avoids unexpected cutoffs.",
+        },
+        {
+          q: "How long does it take to read 600 words?",
+          a: "At an average silent reading pace of roughly 200–225 words per minute, 600 words takes about 2.5 to 3 minutes.",
+        },
+      ],
+    },
+  },
+};
+
+export default function Home({ initialTab = "kueche" }) {
+  const [tab, setTab] = useState(initialTab);
+  const navigate = useNavigate();
+  const { lang, t } = useI18n();
+  const { isUnlocked } = useARG();
+  const isDe = lang === "de";
+
+  useEffect(() => {
+    setTab(initialTab);
+  }, [initialTab]);
+
+  const handleTabChange = (nextTab) => {
+    setTab(nextTab);
+    if (TAB_ROUTES[nextTab]) {
+      navigate(TAB_ROUTES[nextTab]);
+    }
+  };
+
+  const currentArticle = TOOL_ARTICLES[tab]?.[lang] || TOOL_ARTICLES.kueche[lang];
+
+  useEffect(() => {
+    const seoData = TAB_SEO[tab]?.[lang] || TAB_SEO.kueche[lang];
+    document.title = seoData.title;
+
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", seoData.desc);
+    }
+  }, [tab, lang]);
+
+  const activeFaqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: currentArticle.faqs.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
+
+  return (
+    <div className="rise relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(activeFaqSchema),
+        }}
+      />
+
+      <section className="pb-5 pt-6 sm:pb-6 sm:pt-10">
+        <h1 className="font-heading text-[26px] font-semibold leading-[1.08] tracking-tight text-foreground sm:text-[38px]">
+          {t("Sofort umrechnen.")}
+        </h1>
+        <p className="mt-2 max-w-md text-[13px] leading-relaxed text-muted-foreground sm:text-[15px]">
+          {t(
+            "Cups in Gramm, Fahrenheit in Celsius, Pixel in REM – in Sekunden, direkt im Browser und ohne Anmeldung."
+          )}
+        </p>
+      </section>
+
+      <TabNav active={tab} onChange={handleTabChange} />
+
+      <div key={tab} className="rise mt-4 sm:mt-5" role="tabpanel" id={`panel-${tab}`}>
+        {tab === "kueche" && <KitchenConverter />}
+        {tab === "rem" && <PixelRemConverter />}
+        {tab === "format" && <AspectRatioCalculator />}
+        {tab === "prozent" && <PercentageCalculator />}
+        {tab === "passwort" && <PasswordGenerator />}
+        {tab === "text" && <WordCounter />}
+      </div>
+
+      <article className="mt-12 border-t border-border pt-8 sm:mt-14">
+        <div className="max-w-3xl space-y-6">
+          <div>
+            <h2 className="font-heading text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+              {currentArticle.heading}
+            </h2>
+            <p className="mt-2.5 text-[14px] leading-relaxed text-muted-foreground">
+              {currentArticle.intro}
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-border/70 bg-secondary/30 p-5">
+            <h3 className="font-heading text-[14px] font-semibold text-foreground">
+              {currentArticle.formulaTitle}
+            </h3>
+            <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted-foreground">
+              {currentArticle.formulaText}
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-heading text-[15px] font-semibold text-foreground">
+              {currentArticle.deepDiveHeading}
+            </h3>
+            <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground">
+              {currentArticle.deepDiveText}
+            </p>
+          </div>
+
+          {currentArticle.tableRows && (
+            <div className="overflow-x-auto rounded-xl border border-border/70">
+              <div className="border-b border-border/60 bg-secondary/20 px-4 py-2.5">
+                <h3 className="font-heading text-[13px] font-semibold text-foreground">
+                  {currentArticle.tableTitle}
+                </h3>
+              </div>
+              <table className="w-full text-left text-[13px]">
+                <thead>
+                  <tr className="border-b border-border/60 bg-secondary/10 text-muted-foreground">
+                    {currentArticle.tableHeaders.map((header, idx) => (
+                      <th key={idx} className="px-4 py-2.5 font-medium">
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border/50">
+                  {currentArticle.tableRows.map((row, rIdx) => (
+                    <tr key={rIdx} className="align-top">
+                      {row.map((cell, cIdx) => (
+                        <td
+                          key={cIdx}
+                          className={`px-4 py-2.5 ${
+                            cIdx === 0
+                              ? "font-medium text-foreground"
+                              : "text-muted-foreground"
+                          }`}
+                        >
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          <div className="pt-2">
+            <h3 className="font-heading text-[13px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              {isDe ? "Häufig gestellte Fragen (FAQ)" : "Frequently Asked Questions"}
+            </h3>
+            <div className="mt-4 space-y-4">
+              {currentArticle.faqs.map((faq, idx) => (
+                <div key={idx} className="border-b border-border/50 pb-4 last:border-none">
+                  <h4 className="font-heading text-[14.5px] font-semibold text-foreground">
+                    {faq.q}
+                  </h4>
+                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted-foreground">
+                    {faq.a}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <section className="mt-8 border-t border-border/60 pt-6 text-muted-foreground">
+        <h2 className="font-heading text-xs font-semibold uppercase tracking-wider text-foreground">
+          {isDe ? "Über Maßwerk" : "About Maßwerk"}
+        </h2>
+        <p className="mt-1.5 max-w-3xl text-xs leading-relaxed">
+          {isDe
+            ? "Maßwerk bietet präzise und kostenlose Werkzeuge für alltägliche Aufgaben in Küche, Webdesign, Finanzen und Redaktion. Alle Berechnungen laufen zu 100 % clientseitig in Ihrem Browser – ohne Tracking von Eingabedaten, ohne Registrierung und ohne Verzögerung."
+            : "Maßwerk provides precise, free utilities for everyday tasks across baking, web design, finance, and writing. All calculations execute 100% client-side in your browser—with zero input tracking, no sign-up required, and instant results."}
+        </p>
+      </section>
+
+      {isUnlocked && <SecretSanctuary />}
+    </div>
+  );
+}
